@@ -1,1 +1,1 @@
-OMP_NUM_THREADS=8 python3 ./test.py --gpu_ids 6 --n_frames 5 --data_type synthetic --checkpoints_dir checkpoints_waterdrop --which_iter 75000
+OMP_NUM_THREADS=8 python3 ./test.py --gpu_ids 6 --n_frames 5 --data_type real --checkpoints_dir checkpoints_waterdrop --which_iter 75000
