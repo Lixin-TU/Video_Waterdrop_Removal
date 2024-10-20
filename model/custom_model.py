@@ -395,7 +395,7 @@ class WaterDrop(BaseModel):
         return
 
     def vid_test_real(self, vid_test_loader_real, iteration):
-        img_num = 0
+        # img_num = 0
 
         self.netG.eval()
 
@@ -419,13 +419,13 @@ class WaterDrop(BaseModel):
                         os.makedirs(dir_path)
                     # Save the image to the specified path
                     # success = cv2.imwrite('%s/%d.png' % (dir_path, img_num), fake_clean_frame_np)
-                    success = cv2.imwrite('vid_test_real/%s/%d.png'%(data['vid_name'][0], img_num), fake_clean_frame_np)
+                    success = cv2.imwrite('vid_test_real/%s/%d.png'%(data['vid_name'][0], f_ind), fake_clean_frame_np)
                     # Check if saving the image was successful
                     if not success:
-                        print(f"Error saving image: {img_num}")
+                        print(f"Error saving image: {f_ind}")
 
-                    img_num += 1
-                    print('vid_test_real/num:%04d frame'%img_num)
+                    # img_num += 1
+                    print('vid_test_real/num:%04d frame'%f_ind)
         return
         
     def save(self, label):
