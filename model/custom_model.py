@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import torch
 import torch.nn as nn
-from torch.utils.data.dataset import T
+# from torch.utils.data.dataset import T
 import util.util as image_util
 from .base_model import BaseModel
 from torch.nn.parallel import DataParallel
@@ -17,6 +17,13 @@ import numpy as np
 import lpips
 from pytorch_msssim import ssim, ms_ssim
 import os
+
+# print if torch.cuda.is_available()
+if torch.cuda.is_available():
+    print('Using GPU')
+else:
+    print('Using CPU')
+
 
 def matplotlib_imshow(img, datatype='image'):
     if datatype == 'image':
@@ -87,8 +94,13 @@ class WaterDrop(BaseModel):
             self.netG.train()
             self.netD.train()
         
+
         if not self.isTrain:
-            self.loss_fn_alex = lpips.LPIPS(net='alex').cuda()
+            if torch.cuda.is_available():
+                self.loss_fn_alex = lpips.LPIPS(net='alex').cuda()
+            else:
+                self.loss_fn_alex = lpips.LPIPS(net='alex')
+
             # load/define networks
             self.netG = networks.define_G(in_channel=3)
 
@@ -97,9 +109,9 @@ class WaterDrop(BaseModel):
             self.netG.eval()
             self.netG = self.netG.cuda()
             
-            print('---------- Networks initialized -------------')
-            networks.print_network(self.netG)
-            print('-----------------------------------------------')
+            # print('---------- Networks initialized -------------')
+            # networks.print_network(self.netG)
+            # print('-----------------------------------------------')
 
 
     def img_train_forward(self, data):
@@ -390,18 +402,27 @@ class WaterDrop(BaseModel):
         with torch.no_grad():
             for i, data in enumerate(vid_test_loader_real):
                 vid_len = data['rainy_frames'].shape[1]
-                for f_ind in range(vid_len):
+                for f_ind in range(vid_len): # was range(vid_len)
+                    print(f'f_ind: {f_ind}')
+                    print(f'data[\'rainy_frames\'].shape: {data["rainy_frames"].shape}')
+
                     f_ind_list = self.get_neighbour_indecies(f_ind, self.opt.n_frames, vid_len)
                     _, _, fake_clean_frames, vid_fake_masks = self.netG(data['rainy_frames'][:, f_ind_list].cuda())
 
                     fake_clean_frame_np = image_util.tensor2im(fake_clean_frames[:, f_ind-f_ind_list[0]])
                     rainy_frame_np = image_util.tensor2im(data['rainy_frames'][:, f_ind])
 
-                    if os.path.isdir('vid_test_real/%s'%data['vid_name'][0]):
-                        pass
-                    else:
-                        os.mkdir('vid_test_real/%s'%data['vid_name'][0])
-                    cv2.imwrite('vid_test_real/%s/%d.png'%(data['vid_name'][0], img_num), fake_clean_frame_np)
+                    # Define the directory path based on data['vid_name'][0]
+                    dir_path = 'vid_test_real/%s' % data['vid_name'][0]
+                    # Create the directory if it does not exist
+                    if not os.path.exists(dir_path):
+                        os.makedirs(dir_path)
+                    # Save the image to the specified path
+                    # success = cv2.imwrite('%s/%d.png' % (dir_path, img_num), fake_clean_frame_np)
+                    success = cv2.imwrite('vid_test_real/%s/%d.png'%(data['vid_name'][0], img_num), fake_clean_frame_np)
+                    # Check if saving the image was successful
+                    if not success:
+                        print(f"Error saving image: {img_num}")
 
                     img_num += 1
                     print('vid_test_real/num:%04d frame'%img_num)

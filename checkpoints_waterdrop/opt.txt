@@ -1,7 +1,7 @@
 ------------ Options -------------
 checkpoints_dir: checkpoints_waterdrop
 data_type: real
-gpu_ids: []
+gpu_ids: [6]
 init_type: normal
 isTrain: False
 nThreads: 32

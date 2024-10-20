@@ -1,7 +1,7 @@
 import math
 import numpy as np
-from skimage.measure import compare_ssim
-from skimage.measure import compare_psnr
+from skimage.metrics import structural_similarity as compare_ssim
+from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 import cv2
 
 def eval_PSNR(img1, img2):

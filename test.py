@@ -26,7 +26,8 @@ vid_test_loader_syn, vid_test_loader_real = CreateDataLoader(opt)
 model = WaterDrop()
 model.initialize(opt)
 
-if opt.data_type == 'synthetic':
-    model.vid_test_syn(vid_test_loader_syn, int(opt.which_iter))
-elif opt.data_type == 'real':
-    model.vid_test_real(vid_test_loader_real, int(opt.which_iter))
+# if opt.data_type == 'synthetic':
+#     model.vid_test_syn(vid_test_loader_syn, int(opt.which_iter))
+# elif opt.data_type == 'real':
+#     model.vid_test_real(vid_test_loader_real, int(opt.which_iter))
+model.vid_test_real(vid_test_loader_real, int(opt.which_iter))
