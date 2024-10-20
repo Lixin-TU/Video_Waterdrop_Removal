@@ -1,0 +1,13 @@
+------------ Options -------------
+checkpoints_dir: checkpoints_waterdrop
+data_type: real
+gpu_ids: []
+init_type: normal
+isTrain: False
+nThreads: 32
+n_frames: 5
+name: radindrop
+phase: test
+vid_dataroot: ./dataset/test/
+which_iter: 75000
+-------------- End ----------------
